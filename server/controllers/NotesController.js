@@ -4,7 +4,7 @@ import { Auth0Provider } from '@bcwdev/auth0provider'
 
 export class NotesController extends BaseController {
   constructor() {
-    super('api/notes')
+    super('/api/notes')
     this.router
       // NOTE: Beyond this point all routes require Authorization tokens (the user must be logged in)
       .use(Auth0Provider.getAuthorizedUserInfo)
@@ -12,7 +12,7 @@ export class NotesController extends BaseController {
       // .get('/:id', this.getById)
       // .get('/:id/notes', this.getNotes)
       .post('', this.create)
-      .put('/:id/notes', this.edit)
+      .put('/:id', this.edit)
       .delete('/:id', this.delete)
   }
 
