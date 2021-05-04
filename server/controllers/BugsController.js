@@ -8,10 +8,10 @@ export class BugsController extends BaseController {
     super('api/bugs')
     this.router
       // NOTE: Beyond this point all routes require Authorization tokens (the user must be logged in)
-      .use(Auth0Provider.getAuthorizedUserInfo)
       .get('', this.getAll) // KEEP THIS
       .get('/:id', this.getById)
       .get('/:id/notes', this.getNotes)
+      .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.create)
       .put('/:id', this.edit)
       .delete('/:id', this.delete)
@@ -21,7 +21,7 @@ export class BugsController extends BaseController {
 
   async getAll(req, res, next) {
     try {
-      const bugs = await bugsService.getAll({ creatorId: req.userInfo.id })
+      const bugs = await bugsService.getAll()
       res.send(bugs)
     } catch (error) {
       next(error)
@@ -30,9 +30,7 @@ export class BugsController extends BaseController {
 
   async getById(req, res, next) {
     try {
-      const bug = await bugsService.getById({
-        creatorId: req.userInfo.id, _id: req.params.id
-      })
+      const bug = await bugsService.getById({ _id: req.params.id })
       res.send(bug)
     } catch (error) {
       next(error)
@@ -42,7 +40,7 @@ export class BugsController extends BaseController {
   async getNotes(req, res, next) {
     try {
       const notes = await notesService.getNotes({
-        creatorId: req.userInfo.id, bugId: req.parms.id
+        bug: req.params.id
       })
       res.send(notes)
     } catch (error) {
